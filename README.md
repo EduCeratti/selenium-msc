@@ -1,0 +1,1 @@
+https://www.gregbrisebois.com/posts/chromedriver-in-wsl2/

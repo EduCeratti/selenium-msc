@@ -1,0 +1,45 @@
+FROM alpine:3.14
+
+RUN apk add wget &&\
+    apk add unzip &&\
+    apk add dpkg
+
+RUN dpkg --add-architecture amd64
+
+# Install Google Chrome
+# RUN wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb &&\
+#     dpkg -i *.deb
+
+RUN apk add chromium
+
+# # Install ChromeDriver.
+# RUN wget -N http://chromedriver.storage.googleapis.com/92.0.4515.107/chromedriver_linux64.zip -P ~/ &&\
+#     unzip ~/chromedriver_linux64.zip -d ~/ &&\
+#     rm ~/chromedriver_linux64.zip &&\
+#     mv -f ~/chromedriver /usr/local/share/ &&\
+#     chmod +x /usr/local/share/chromedriver &&\
+#     ln -s /usr/local/share/chromedriver /usr/local/bin/chromedriver
+
+# # Install Xvfb
+RUN apk add xvfb
+
+# # Install Python and Dependencies
+# RUN apk add python-pip
+# RUN pip install virtualenv
+
+# Install python/pip
+ENV PYTHONUNBUFFERED=1
+RUN apk add --update --no-cache python3 && ln -sf python3 /usr/bin/python
+RUN python3 -m ensurepip
+RUN pip3 install --no-cache --upgrade pip setuptools
+
+COPY requirements.txt /app/
+COPY msc.py /app/
+COPY run.sh /app/
+
+RUN pip install -r /app/requirements.txt
+
+# # grab contents of source directory
+# #VOLUME ["/src"]
+
+# RUN sh /app/run.sh
