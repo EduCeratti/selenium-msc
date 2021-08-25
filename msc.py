@@ -1,10 +1,13 @@
+import os
 import time 
+import logging  
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.options import Options
 
+logging.basicConfig(filename='msc_execution.log', level=logging.INFO, filemode='w', format='%(asctime)s :: %(levelname)s :: %(message)s')
 
-class Essential():
+class Essential():  
 
     # Config Parameters
     url = 'https://toolscms-mobile.terra.com/MSC/adm/account/logon.aspx?ReturnUrl=%2fMSC%2fadm%2f'
@@ -36,23 +39,24 @@ class Essential():
         time.sleep(2)
 
         self.iterateFile(driver)
+        logging.info("Finish")
 
-        print("Finish")
         driver.close()
 
     def iterateFile(self, driver):
             
         with open(self.filename, "r") as a_file:
             for line in a_file:
-                stripped_line = line.strip()   
-                print(stripped_line)
+                stripped_line = line.strip()
+                logging.info(stripped_line)
+                #print(stripped_line)
                 inputElement = driver.find_element_by_id("txtUlkNumero")
                 inputElement.send_keys(stripped_line)
                 time.sleep(2)
                 linkUnlock = driver.find_element_by_id("btnExecuteUlk").click()
                 time.sleep(2)
                 statusUnblock = driver.find_elements_by_xpath('.//span[@id = "lblAlertUlk"]')[0].text
-                print(statusUnblock)
+                logging.info(statusUnblock)
                 driver.find_element_by_id('txtUlkNumero').clear()
                 time.sleep(1)
 
